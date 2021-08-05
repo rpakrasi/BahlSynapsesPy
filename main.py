@@ -1,11 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Jul 28 12:50:51 2020
-Modified from Bahl et al 2012
-Converted to Python
-Added ability to receive synaptic inputs (and/or current injection)
-@author: marianne.bezaire@gmail.com
-"""
+
 #################################
 # Load modules
 #################################
@@ -14,7 +7,43 @@ from neuron import h
 import simrun
 h.load_file("stdrun.hoc")
 h.load_file("nrngui.hoc") # load_file
+import numpy as np
+import matplotlib.pyplot as plt
+import pylab
+from scipy.optimize import curve_fit
 
+# dserine sigmoidal curve
+z = np.linspace(-40, 40, 100) 
+#z = np.arange(-40, 40)
+y = 2/(1 + np.exp(-0.08 * z)) 
+plt.plot(z, y)
+plt.show()
+
+dserine = 33.1
+scalefactor = 1.2/(1 + np.exp(- dserine * (0.08)))
+"""
+
+def sigmoid(x, a, b):
+    y = 1/(1 + np.exp(-a * (x-b)))
+    return y
+
+x_data = np.array([0.0,   1.0,  3.0, 4.3, 7.0,   8.0,   8.5, 10.0, 12.0])
+y_data = np.array([0.0, 0.25, 0.5, 0.75, 1.0, 1.25,  1.5, 1.75, 2.0])
+popt, pcov = curve_fit(sigmoid, x_data, y_data)
+x = np.linspace(0, 40, 50)
+y = sigmoid(x, *popt)
+plt.plot(x_data, y_data, label = 'data')
+plt.plot(x, y, label = 'fit')
+plt.show()
+"""
+# lserine sigmoidal curve
+z = np.linspace(0, 40, 100)
+y = 2/(1 + np.exp(-0.08 * z))
+plt.plot(z, y)
+plt.show()
+
+lserine = 1371
+scalefactor = 1.2/(1 + np.exp(- lserine * (0.08)))
 
 #################################
 # Set parameters
@@ -33,7 +62,7 @@ print("simname = " + simname + ", fstem = " + fstem)
 
 mytstop = 800 # ms, length of the simulation
 
-addSynInputs = 0 # 2: synaptic inputs and current injection
+addSynInputs = 1 # 2: synaptic inputs and current injection
 				 # 1: synaptic inputs only
 				 # 0: current injection only
 
@@ -133,7 +162,8 @@ for r in range(len(model_cell.excStimcell_list)): # For each artificial
 		nclist.append(nc) # add the synaptic connection object to a list
 		
 		nc.delay = 3 # ms, axonal conduction delay + synaptic delay
-		nc.weight[0] = model_cell.excitatory_syn_weight # synaptic weight 
+		nc.weight[0] = model_cell.excitatory_syn_weight * 2.2 # synaptic weight 
+        
 		print("adding exc syn from ", r, " to Excitatory synapse #", j)
 
 
