@@ -14,18 +14,23 @@ from scipy.optimize import curve_fit
 
 # lserine sigmoidal curve
 x = np.linspace(0, 1400, 100) 
-#z = np.arange(-40, 40)
-v = 2.0/(1 + np.exp(-0.08 * x)) 
+v = .77/(1 + 12 * (np.exp(-0.000003 * x * x)) )
 plt.plot(x, v)
+plt.xlabel("l-serine nmol/g")
+plt.ylabel("gmax")
 plt.show()
 
 lserine = 1371
-scalefactor1 = 2.0/(1 + np.exp(-0.08 * lserine))
+scalefactor1 = .77/(1 + 12 * (np.exp(-0.000003 * lserine * lserine)))
+#scalefactor1 = .77 * lserine * lserine
+
 
 # dserine sigmoidal curve
 z = np.linspace(0, 40, 100)
-y = 2.0/(1 + 13 * (np.exp(-0.008 * z * z))) 
+y = 2/(1 + 13 * (np.exp(-0.008 * z * z))) 
 plt.plot(z, y)
+plt.xlabel("d-serine nmol/g")
+plt.ylabel("gmax")
 plt.show()
 
 dserine = 18.1
