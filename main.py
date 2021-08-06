@@ -12,17 +12,26 @@ import matplotlib.pyplot as plt
 import pylab
 from scipy.optimize import curve_fit
 
-# dserine sigmoidal curve
-z = np.linspace(-40, 40, 100) 
+# lserine sigmoidal curve
+x = np.linspace(0, 1400, 100) 
 #z = np.arange(-40, 40)
-y = 2/(1 + np.exp(-0.08 * z)) 
+v = 2.0/(1 + np.exp(-0.08 * x)) 
+plt.plot(x, v)
+plt.show()
+
+lserine = 1371
+scalefactor1 = 2.0/(1 + np.exp(-0.08 * lserine))
+
+# dserine sigmoidal curve
+z = np.linspace(0, 40, 100)
+y = 2.0/(1 + 13 * (np.exp(-0.008 * z * z))) 
 plt.plot(z, y)
 plt.show()
 
-dserine = 33.1
-scalefactor = 1.2/(1 + np.exp(- dserine * (0.08)))
-"""
+dserine = 18.1
+scalefactor = 2.0/(1 + 13 * (np.exp(-0.008 * dserine * dserine)))
 
+"""
 def sigmoid(x, a, b):
     y = 1/(1 + np.exp(-a * (x-b)))
     return y
@@ -36,14 +45,6 @@ plt.plot(x_data, y_data, label = 'data')
 plt.plot(x, y, label = 'fit')
 plt.show()
 """
-# lserine sigmoidal curve
-z = np.linspace(0, 40, 100)
-y = 2/(1 + np.exp(-0.08 * z))
-plt.plot(z, y)
-plt.show()
-
-lserine = 1371
-scalefactor = 1.2/(1 + np.exp(- lserine * (0.08)))
 
 #################################
 # Set parameters
@@ -60,7 +61,7 @@ myTauValue = 0.5 # This is an example of how to modify synaptic parameters
 fstem="Results" + sltype + simname
 print("simname = " + simname + ", fstem = " + fstem)
 
-mytstop = 800 # ms, length of the simulation
+mytstop = 1000 # ms, length of the simulation
 
 addSynInputs = 1 # 2: synaptic inputs and current injection
 				 # 1: synaptic inputs only
@@ -162,7 +163,7 @@ for r in range(len(model_cell.excStimcell_list)): # For each artificial
 		nclist.append(nc) # add the synaptic connection object to a list
 		
 		nc.delay = 3 # ms, axonal conduction delay + synaptic delay
-		nc.weight[0] = model_cell.excitatory_syn_weight * 2.2 # synaptic weight 
+		nc.weight[0] = model_cell.excitatory_syn_weight * scalefactor # synaptic weight 
         
 		print("adding exc syn from ", r, " to Excitatory synapse #", j)
 
